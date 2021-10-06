@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <title>ONNX StyleGAN2-ada basic example</title>
+    </header>
+    <body>
+		<canvas id="gan-canvas" width="512" height="512" style="border:1px solid #d3d3d3;"></canvas>
+        <!-- import ONNXRuntime Web from CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+        <script>
+			const ganCanvas = document.getElementById('gan-canvas');
+		
+            // use an async context to call onnxruntime functions.
+            async function main() {
+                try {
+					// Create session
+					const session = await ort.InferenceSession.create('./model_full.onnx');
+					
+					// Create array
+					const dataA = new Float64Array(512);
+					
+					// Random vector with values from -2 to 2
+					for (var i=0;i<512;i++) {
+						dataA[i] =  (Math.random()-0.5)*4;
+					}
+					
+					// Assign (if you use classes, you might need to expand this)
+					const tensorA = new ort.Tensor('float64', dataA, [1,512]);
+					const feeds = { z: tensorA};
+					
+					// Run
+					const results = await session.run(feeds);
+
+					// Get the result
+                    const dataC = results['Y'];
+					
+					// Get the canvas
+					var ctx = ganCanvas.getContext('2d');
+
+					// first, create a new ImageData to contain our pixels
+					var imgData = ctx.createImageData(512, 512); // width x height
+					
+					// get data pointer 
+					const data = imgData.data;
+					
+					// assign color info
+					var offsetD = 0;
+					const factorR = 512*512;
+					const factorB = 512*512*2;
+					for (var i = 0; i < (512*512); i++) {
+						data[offsetD]     = (dataC.data[i]*127.5)+128;
+						data[offsetD + 1] = (dataC.data[i + factorR]*127.5)+128;
+						data[offsetD + 2] = (dataC.data[i + factorB]*127.5)+128;
+						data[offsetD + 3] = 255;
+						offsetD += 4;
+					}
+
+					// fill canvas
+					ctx.putImageData(imgData, 0, 0);
+
+                } catch (e) {
+                    document.write(`failed to inference ONNX model: ${e}.`);
+                }
+            }
+
+            main();
+        </script>
+    </body>
+</html>
