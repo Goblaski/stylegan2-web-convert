@@ -1,5 +1,5 @@
 # stylegan2-web-convert
-A converter and some examples to run official [StyleGAN2](https://github.com/NVlabs/stylegan2) based networks in your browser using ONNX.
+A converter and some examples to run official [StyleGAN2](https://github.com/NVlabs/stylegan2) based networks in your browser using ONNX. This approach may work for [StyleGAN3](https://github.com/NVlabs/stylegan3) as NVLabs stated on their StyleGAN3 git: "This repository is an updated version of stylegan2-ada-pytorch" but I have currently not tested this.
 
 **I am not affilated with NVLabs.** I am merely created this repository to help others with converting their StyleGAN2 models for use in a browser.
 - For the narrative/blogpost see: https://www.guidodejong.nl/hack/running-stylegan2-ada-in-browser/
