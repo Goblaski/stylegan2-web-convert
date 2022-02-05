@@ -23,7 +23,7 @@ def convert_to_onnx(source, dest):
         
     #use a dummy input and label to determine graph 
     dummy_input = torch.from_numpy(np.random.RandomState(0).randn(1, GG.z_dim)).to(device)
-    mapped_input = torch.from_numpy(np.random.RandomState(0).randn(1, 16, GG.z_dim)).to(device)
+	mapped_input = torch.from_numpy(np.random.RandomState(0).randn(1, GG.mapping.num_ws, GG.z_dim)).to(device)
     label = torch.zeros([1, GG.c_dim], device=device)
     
     # export full model as onnx file
